@@ -1,0 +1,61 @@
+OS实验课之添加linux系统调用并编译内核
+最近OS实验课要给linux系统添加一个系统调用，并且重新编译内核
+按理来说其实整个过程一共就清晰的几步:
+**修改系统调用表->声明系统调用->实现系统调用
+ ->make menuconfig -> make -> make modules
+ ->make modules_install -> make install
+ ->reboot -> 测试。
+然而这个linux系统简直了！！比尔盖茨创业成功不是没有原因的，
+这个linux和windows相比简直不是给人用的！！！！！！！！！！
+各种各样奇葩的问题，首先虚拟机上的网速相当慢，我下个内核下了一个晚上，
+中间各种离奇曲折的事我都忘得七七八八了，因为已经麻木了，实在无力吐槽，
+但有一个事我始终记忆犹新，
+那就是在配置软件包的时候可能会出现这个相当头疼的问题：
+     安装此xxxxx包需要：
+	           依赖yyyyy(=ubuntu1) ，但是即将安装yyyyy(=ubuntu1.18.04)
+     因为要维持原来的依赖关系，导致无法安装成功**
+
+??????????你到底想干嘛？？？？？？？
+小问号我有很多朋友。
+其实这个报错就是想告诉你版本不适配了，需要改！版！本！
+但是！版本有这么好改嘛？
+网上大多数的做法是让你更新一下软件源（这里不赘述操作步骤）
+然而！我阿里华为清华南大网易的全都试过了！还是不行！
+这时候简直要崩溃了，已经是凌晨一点了，爆痘的第三天，
+然后又看见歪门邪道的解答说把原来的软件删了就行，
+就找了个命令，apt-get remove xxxxx
+结果！这玩意不知道为什么总是警告我即将删除一百多个基础软件
+吓得我也不敢删了（其实一开始是敢的，但是这次不是让我输入y同意，
+而是输入一段中文，类似于我已经准备好了这种的话，
+然而我几百B/s的网速所以中文输入法还没有搞定所以放弃了orz）
+于是回头想想只能是软件源的问题了，又再试了一遍一致好评的阿里源，
+这一次的软件源reload时几乎百分百安装了所有的包，所以觉得有戏，
+诚惶诚恐的输入了apt-get install libncurses5-dev，好的又失败了wtf……
+本来准备重装一个低版本的系统了，我猜低版本的ubuntu应该会版本适配吧
+可是这时又想到了下载了一个晚上内核的恐惧……
+就在崩溃的边缘，这个救星在犄角旮旯里被我翻到了！！
+“aptitude”！！！！！！！！！！！！！！！！
+这是一个神奇的软件！带领你走上linux巅峰！！
+在这里没有版本适配问题！没有依赖问题！！！
+不适配，咱就降级downgrade！就是这么任性！
+记住一点就行，aptitude install xxxxx（某个一直失败的软件包名称）
+然后依次输入n,y,y就行了，n是拒绝取消安装，y是同意降级，最后的y是确认
+好了，故事到这里就结束了，后面再遇到版本问题全部用apptitude迎刃而解了，
+虽然后来整到了凌晨四点，但一帆风顺，腿不麻了，头不疼了，满满的成就感！
+最后，祝你调试半生，归来依旧秀发。
+Last，may you debug for half a lifetime, flourishing hair still being there.
+
+
+   If you come into any problems on the application's version and cannot solve it
+by updating your application source, then try to use apptitude! It's a magic application, you will never need to worry about version problems any more!
+
+Just use the commands as follows:           
+
+> apt-get install apptitude
+> aptitude install  application_name
+
+Totally three choices will be asked to make:
+            The answer is:	n / y / y    which means: refuse the cancellation / accept the downgrading / confirm it.
+Then you can enjoy the incredible power aptitude brings you.
+
+Acknowledgement: https://www.cnblogs.com/liushui-sky/p/9304495.html
